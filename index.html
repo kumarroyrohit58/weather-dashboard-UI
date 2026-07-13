@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🌤 Weather Dashboard</h1>
+        <p>Search for any city's weather</p>
+
+        <div class="search-box">
+
+            <input type="text" id="cityInput" placeholder="Enter city name...">
+
+            <button id="searchBtn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Search
+            </button>
+
+        </div>
+
+        <!-- Current Weather -->
+
+        <section class="weather-card">
+
+            <h2>Current Weather</h2>
+
+            <div class="weather-icon">
+                ☀️
+            </div>
+
+            <h3 id="cityName">
+                Kolkata
+            </h3>
+
+            <h1 class="temperature">
+                28°C
+            </h1>
+
+            <p class="condition">
+                Partly Cloudy
+            </p>
+
+            <div class="weather-details">
+
+                <div>
+                    💧
+                    Humidity
+                    <br>
+                    74%
+                </div>
+
+                <div>
+                    💨
+                    Wind
+                    <br>
+                    12 km/h
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Forecast -->
+
+        <section>
+
+            <h2>5-Day Forecast</h2>
+
+            <div class="forecast">
+
+                <div class="forecast-card">
+                    <h4>Mon</h4>
+                    ☀️
+                    <p>30°C</p>
+                </div>
+
+                <div class="forecast-card">
+                    <h4>Tue</h4>
+                    🌧️
+                    <p>27°C</p>
+                </div>
+
+                <div class="forecast-card">
+                    <h4>Wed</h4>
+                    ⛅
+                    <p>29°C</p>
+                </div>
+
+                <div class="forecast-card">
+                    <h4>Thu</h4>
+                    ☀️
+                    <p>31°C</p>
+                </div>
+
+                <div class="forecast-card">
+                    <h4>Fri</h4>
+                    🌩️
+                    <p>26°C</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Recent Searches -->
+
+        <section>
+
+            <h2>Recent Searches</h2>
+
+            <div id="recentSearches">
+
+                <span class="city-pill">
+                    Kolkata
+                </span>
+
+                <span class="city-pill">
+                    Delhi
+                </span>
+
+                <span class="city-pill">
+                    Mumbai
+                </span>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
