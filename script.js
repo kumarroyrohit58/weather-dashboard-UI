@@ -2,6 +2,13 @@ const cityInput = document.getElementById("cityInput");
 const searchBtn = document.getElementById("searchBtn");
 const cityName = document.getElementById("cityName");
 const recentSearches = document.getElementById("recentSearches");
+const temperature = document.getElementById("temperature");
+const condition = document.getElementById("condition");
+const humidity = document.getElementById("humidity");
+const wind = document.getElementById("wind");
+const weatherIcon = document.getElementById("weatherIcon");
+
+const API_KEY = "8f99b84643d43e7c6a258ad30faf6451";
 
 searchBtn.addEventListener("click", searchCity);
 
@@ -19,27 +26,25 @@ function searchCity() {
         return;
     }
 
-    // Update the displayed city name
-    cityName.textContent = city;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
 
-    // Prevent duplicate recent searches
-    const existingCities = [...recentSearches.querySelectorAll(".city-pill")];
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
 
-    const alreadyExists = existingCities.some(
-        pill => pill.textContent.toLowerCase() === city.toLowerCase()
-    );
+            console.log(data);
 
-    if (!alreadyExists) {
-        const pill = document.createElement("span");
-        pill.className = "city-pill";
-        pill.textContent = city;
+            cityName.textContent = data.name;
 
-        pill.addEventListener("click", () => {
-            cityName.textContent = pill.textContent;
-        });
+            temperature.textContent = data.main.temp + "°C";
 
-        recentSearches.prepend(pill);
-    }
+            condition.textContent = data.weather[0].description;
 
-    cityInput.value = "";
+            humidity.textContent = data.main.humidity + "%";
+
+            wind.textContent = data.wind.speed + " m/s";
+        })
+        .catch(error => {
+            console.log(error);
+        })
 }
