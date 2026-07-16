@@ -7,6 +7,7 @@ const condition = document.getElementById("condition");
 const humidity = document.getElementById("humidity");
 const wind = document.getElementById("wind");
 const weatherIcon = document.getElementById("weatherIcon");
+const forecastContainer = document.getElementById("forecastContainer");
 
 const API_KEY = "8f99b84643d43e7c6a258ad30faf6451";
 
@@ -18,7 +19,8 @@ cityInput.addEventListener("keypress", function (event) {
     }
 });
 
-function searchCity() {
+async function searchCity() {
+
     const city = cityInput.value.trim();
 
     if (city === "") {
@@ -26,25 +28,110 @@ function searchCity() {
         return;
     }
 
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
+    searchBtn.textContent = "Loading...";
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
+    try {
 
-            console.log(data);
+        // ---------------- CURRENT WEATHER ----------------
 
-            cityName.textContent = data.name;
+        const weatherUrl =
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
 
-            temperature.textContent = data.main.temp + "°C";
+        const weatherResponse = await fetch(weatherUrl);
 
-            condition.textContent = data.weather[0].description;
+        const weatherData = await weatherResponse.json();
 
-            humidity.textContent = data.main.humidity + "%";
+        if (!weatherResponse.ok) {
+            alert(weatherData.message);
+            searchBtn.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Search`;
+            return;
+        }
 
-            wind.textContent = data.wind.speed + " m/s";
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        cityName.textContent = weatherData.name;
+        temperature.textContent = Math.round(weatherData.main.temp) + "°C";
+        condition.textContent = weatherData.weather[0].description;
+        humidity.textContent = weatherData.main.humidity + "%";
+        wind.textContent = weatherData.wind.speed + " m/s";
+
+        weatherIcon.innerHTML =
+            `<img src="https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png" alt="Weather Icon">`;
+
+        // ---------------- 5-DAY FORECAST ----------------
+
+        const forecastUrl =
+            `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`;
+
+        const forecastResponse = await fetch(forecastUrl);
+
+        const forecastData = await forecastResponse.json();
+
+        const dailyForecast = forecastData.list.filter(item =>
+            item.dt_txt.includes("12:00:00")
+        );
+
+        forecastContainer.innerHTML = "";
+
+        dailyForecast.forEach(day => {
+
+            const date = new Date(day.dt_txt);
+
+            const dayName = date.toLocaleDateString("en-US", {
+                weekday: "short"
+            });
+
+            const card = `
+                <div class="forecast-card">
+                    <h4>${dayName}</h4>
+
+                    <img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png" alt="Weather Icon">
+
+                    <p>${Math.round(day.main.temp)}°C</p>
+
+                    <small>${day.weather[0].main}</small>
+                </div>
+            `;
+
+            forecastContainer.innerHTML += card;
+
+        });
+
+        // ---------------- RECENT SEARCHES ----------------
+
+        const existingCities = [...recentSearches.querySelectorAll(".city-pill")];
+
+        const alreadyExists = existingCities.some(
+            pill => pill.textContent.toLowerCase() === city.toLowerCase()
+        );
+
+        if (!alreadyExists) {
+
+            const pill = document.createElement("span");
+
+            pill.className = "city-pill";
+
+            pill.textContent = weatherData.name;
+
+            pill.addEventListener("click", () => {
+                cityInput.value = pill.textContent;
+                searchCity();
+            });
+
+            recentSearches.prepend(pill);
+
+        }
+
+        cityInput.value = "";
+
+    } catch (error) {
+
+        alert("Something went wrong!");
+
+        console.error(error);
+
+    } finally {
+
+        searchBtn.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Search`;
+
+    }
+
 }

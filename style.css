@@ -150,6 +150,16 @@ h1 {
     color: white;
 }
 
+.forecast-card img {
+    width: 60px;
+    height: 60px;
+}
+
+.weather-icon img {
+    width: 100px;
+    height: 100px;
+}
+
 /* Responsive */
 
 @media(max-width:768px) {
